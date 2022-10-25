@@ -1,6 +1,8 @@
 <h1 align='center'>hl_match_area.nvim</h1>
 Neovim plugin that allows highlighting the whole area between matching delimiters ('{}' '[]' '()' '<>')
 
+![demo](https://user-images.githubusercontent.com/83038443/197796655-b1ff0a7a-ed5b-4922-96d4-3acc7b87e1b5.gif)
+
 ## Installation
 
 - With [packer.nvim](https://github.com/wbthomason/packer.nvim)
