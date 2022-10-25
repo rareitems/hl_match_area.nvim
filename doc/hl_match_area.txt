@@ -1,0 +1,61 @@
+================================================================================
+                                                                 *hl_match_area*
+
+Provides a highlighting of the area between matching delimiters.
+The supported delimiters are '{}' '[]' '()' '<>'
+
+For example given this piece of "code" and cursor positioned on the first curly bracket plugin would highlight
+the whole are between '{' and '}'
+>
+ { 1, 2, 3, 4, 5 }
+ ^_______________^
+<
+
+The case of delimiters not being on the same line is also handled
+For example
+>
+ {
+ ^
+   1,
+_____
+   2,
+_____
+   3,
+_____
+   4,
+_____
+   5
+____
+ }
+-^
+<
+
+================================================================================
+                                                           *hl_match_area.Usage*
+
+Enabling and configuring the plugin is done through the 'setup' function see |hl_match_area.setup|
+
+hl_match_area.setup({user_config})                         *hl_match_area.setup*
+    Setups and enables the plugin plugin with the provided config.
+    Config has a following structure and purpose
+    >
+    {
+      n_lines_to_search: number -- how many lines should be searched for a matching delimiter
+      highlight: table, -- what highlight should be used see |nvim_set_hl()|
+      highlight_in_insert_mode: boolean, -- should highlightning also be done in insert mode
+    }
+    <
+
+    Any of the values can be empty if so default config values are used.
+    Default config values are as follows
+    >
+      n_lines_to_search = 100,
+      highlight = { bg = "#222277" },
+      highlight_in_insert_mode = true,
+    <
+
+    Parameters: ~
+        {user_config}  (table)
+
+
+vim:tw=78:ts=8:noet:ft=help:norl:
