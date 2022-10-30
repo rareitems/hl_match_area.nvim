@@ -71,7 +71,7 @@ local opposites = {
 
 local function check(lines_to_search, highlight_in_insert_mode)
   if should_clear_hl then
-    vim.api.nvim_buf_clear_highlight(0, NSID, 0, -1)
+    vim.api.nvim_buf_clear_namespace(0, NSID, 0, -1)
     should_clear_hl = false
   end
 
@@ -294,6 +294,7 @@ hl_match_area.setup = function(user_config)
 
   vim.api.nvim_set_hl(0, HIGHLIGHT_NAME, config.highlight)
   vim.api.nvim_create_augroup(AUGROUP, { clear = true })
+
   vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
     group = AUGROUP,
     callback = function()
