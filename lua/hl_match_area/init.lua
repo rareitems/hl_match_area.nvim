@@ -301,6 +301,16 @@ hl_match_area.setup = function(user_config)
       check(config.n_lines_to_search, config.highlight_in_insert_mode)
     end,
   })
+
+  vim.api.nvim_create_autocmd({ "WinLeave" }, {
+    group = AUGROUP,
+    callback = function()
+      if should_clear_hl then
+        vim.api.nvim_buf_clear_namespace(0, NSID, 0, -1)
+        should_clear_hl = false
+      end
+    end,
+  })
 end
 
 return hl_match_area
