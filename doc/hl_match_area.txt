@@ -31,9 +31,12 @@ ____
 <
 
 ================================================================================
-                                                           *hl_match_area.Usage*
+                                                       *hl_match_area.Highlight*
 
-Enabling and configuring the plugin is done through the 'setup' function see |hl_match_area.setup|
+Highlight name is 'MatchArea' can be changed through 'vim.api.set_hl'
+>
+vim.api.nvim_set_hl(0, 'MatchArea', {bg = "#FFFFFF"})
+<
 
 hl_match_area.setup({user_config})                         *hl_match_area.setup*
     Setups and enables the plugin plugin with the provided config.
@@ -41,8 +44,8 @@ hl_match_area.setup({user_config})                         *hl_match_area.setup*
     >
     {
       n_lines_to_search: number -- how many lines should be searched for a matching delimiter
-      highlight: table, -- what highlight should be used see |nvim_set_hl()|
-      highlight_in_insert_mode: boolean, -- should highlightning also be done in insert mode
+      highlight_in_insert_mode: boolean, -- should highlighting also be done in insert mode
+      dealy: 100, -- delay in miliseconds to highlight
     }
     <
 
@@ -50,8 +53,8 @@ hl_match_area.setup({user_config})                         *hl_match_area.setup*
     Default config values are as follows
     >
       n_lines_to_search = 100,
-      highlight = { bg = "#222277" },
       highlight_in_insert_mode = true,
+      delay = 100,
     <
 
     Parameters: ~

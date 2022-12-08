@@ -16,10 +16,7 @@ use { 'rareitems/hl_match_area.nvim' }
 Simply call the following function somewhere in your config
 
 ```lua
-  require("hl_match_area").setup({
-        highlight = { bg = "#222277" }, -- what highlight should be used see
-                                        -- this is a default value
-  })
+  require("hl_match_area").setup()
 ```
 
 If you don't provide any arguments to the setup function, default values will be used, which are as follows (obviously you can also change them)
@@ -27,7 +24,13 @@ If you don't provide any arguments to the setup function, default values will be
 ```lua
 {
     n_lines_to_search = 100 -- how many lines should be searched for a matching delimiter
-    highlight = { bg = "#222277" }, -- what highlight should be used see
     highlight_in_insert_mode = true, -- should highlighting also be done in insert mode
+    delay = 100, -- delay before the highglight
 }
+```
+
+Changing the highglight can be done through Neovim API. For example:
+
+```lua
+vim.api.nvim_set_hl(0, 'MatchArea', {bg = "#FFFFFF"})
 ```

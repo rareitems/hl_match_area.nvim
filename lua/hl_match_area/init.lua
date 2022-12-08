@@ -30,14 +30,18 @@
 ---<
 ---@brief ]]
 
----@mod hl_match_area.Usage
+---@mod hl_match_area.Highlight
 ---@brief [[
----Enabling and configuring the plugin is done through the 'setup' function see |hl_match_area.setup|
+---Highlight name is 'MatchArea' can be changed through 'vim.api.set_hl'
+--->
+---vim.api.nvim_set_hl(0, 'MatchArea', {bg = "#FFFFFF"})
+---<
 ---@brief ]]
 
 local NSID = vim.api.nvim_create_namespace("hl_match_area")
 local HIGHLIGHT_NAME = "MatchArea"
 local AUGROUP = "hl_match_area_augroup"
+local TIMER = nil
 
 local should_clear_hl = false
 
@@ -69,10 +73,15 @@ local opposites = {
   [">"] = "<",
 }
 
-local function check(lines_to_search, highlight_in_insert_mode)
+local function check(lines_to_search, highlight_in_insert_mode, delay)
   if should_clear_hl then
     vim.api.nvim_buf_clear_namespace(0, NSID, 0, -1)
     should_clear_hl = false
+  end
+
+  if TIMER then
+    TIMER:stop()
+    TIMER = nil
   end
 
   if vim.fn.mode() == "i" and not highlight_in_insert_mode then
@@ -257,9 +266,16 @@ local function check(lines_to_search, highlight_in_insert_mode)
 
   if has_found_match and #pos_to_hl ~= 0 then
     should_clear_hl = true
-    for _, it in ipairs(pos_to_hl) do
-      vim.api.nvim_buf_add_highlight(0, NSID, HIGHLIGHT_NAME, it[1], it[2], it[3])
-    end
+    TIMER = vim.loop.new_timer()
+    TIMER:start(
+      delay,
+      0,
+      vim.schedule_wrap(function()
+        for _, it in ipairs(pos_to_hl) do
+          vim.api.nvim_buf_add_highlight(0, NSID, HIGHLIGHT_NAME, it[1], it[2], it[3])
+        end
+      end)
+    )
   end
 end
 
@@ -267,7 +283,7 @@ local hl_match_area = {}
 
 local DEFAULT_CONFIG = {
   n_lines_to_search = 100,
-  highlight = { bg = "#222277" },
+  delay = 100, -- in ms
   highlight_in_insert_mode = true,
 }
 
@@ -276,8 +292,8 @@ local DEFAULT_CONFIG = {
 --->
 ---{
 ---  n_lines_to_search: number -- how many lines should be searched for a matching delimiter
----  highlight: table, -- what highlight should be used see |nvim_set_hl()|
 ---  highlight_in_insert_mode: boolean, -- should highlighting also be done in insert mode
+---  dealy: 100, -- delay in miliseconds to highlight
 ---}
 ---<
 ---
@@ -285,20 +301,20 @@ local DEFAULT_CONFIG = {
 ---Default config values are as follows
 --->
 ---  n_lines_to_search = 100,
----  highlight = { bg = "#222277" },
 ---  highlight_in_insert_mode = true,
+---  delay = 100,
 ---<
 ---@param user_config table
 hl_match_area.setup = function(user_config)
   local config = vim.tbl_deep_extend("force", DEFAULT_CONFIG, user_config or {})
 
-  vim.api.nvim_set_hl(0, HIGHLIGHT_NAME, config.highlight)
+  vim.api.nvim_set_hl(0, HIGHLIGHT_NAME, { bg = "#222277" })
   vim.api.nvim_create_augroup(AUGROUP, { clear = true })
 
   vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
     group = AUGROUP,
     callback = function()
-      check(config.n_lines_to_search, config.highlight_in_insert_mode)
+      check(config.n_lines_to_search, config.highlight_in_insert_mode, config.delay)
     end,
   })
 
