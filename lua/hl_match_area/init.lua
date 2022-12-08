@@ -295,7 +295,7 @@ hl_match_area.setup = function(user_config)
   vim.api.nvim_set_hl(0, HIGHLIGHT_NAME, config.highlight)
   vim.api.nvim_create_augroup(AUGROUP, { clear = true })
 
-  vim.api.nvim_create_autocmd({ "CursorHold", "CursorHoldI" }, {
+  vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
     group = AUGROUP,
     callback = function()
       check(config.n_lines_to_search, config.highlight_in_insert_mode)
