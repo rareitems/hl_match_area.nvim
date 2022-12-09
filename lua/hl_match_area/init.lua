@@ -308,7 +308,10 @@ local DEFAULT_CONFIG = {
 hl_match_area.setup = function(user_config)
   local config = vim.tbl_deep_extend("force", DEFAULT_CONFIG, user_config or {})
 
-  vim.api.nvim_set_hl(0, HIGHLIGHT_NAME, { bg = "#222277" })
+  if vim.fn.hlexists(HIGHLIGHT_NAME) == 0 then
+    vim.api.nvim_set_hl(0, HIGHLIGHT_NAME, { bg = "#222277" })
+  end
+
   vim.api.nvim_create_augroup(AUGROUP, { clear = true })
 
   vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
