@@ -45,7 +45,7 @@ hl_match_area.setup({user_config})                         *hl_match_area.setup*
     {
       n_lines_to_search: number -- how many lines should be searched for a matching delimiter
       highlight_in_insert_mode: boolean, -- should highlighting also be done in insert mode
-      dealy: 100, -- delay in miliseconds to highlight
+      delay: 100, -- delay in miliseconds to highlight
     }
     <
 
