@@ -103,15 +103,15 @@ local function check(highlight_in_insert_mode, delay)
     start_row = row
     start_col = col
     end_row = pos_to_hl[1] - 1
-    end_col = pos_to_hl[2]
+    end_col = pos_to_hl[2] -- -1 + 1 - searchpairpos is (1,1)-indexed, but end_col is exclusive
   elseif valid_chars_backward_search[cur_char] then
     local start_char = opposites[cur_char]
     pos_to_hl = vim.fn.searchpairpos(start_char, "", cur_char, "nbW")
 
-    start_row = pos_to_hl[1] - 1
-    start_col = pos_to_hl[2]
+    start_row = pos_to_hl[1] - 1 -- searchpairpos is (1,1)-indexed
+    start_col = pos_to_hl[2] - 1 -- searchpairpos is (1,1)-indexed
     end_row = row
-    end_col = col
+    end_col = col + 1 -- end_col is exclusive
   else
     return
   end
