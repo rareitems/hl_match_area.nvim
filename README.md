@@ -23,7 +23,6 @@ If you don't provide any arguments to the setup function, default values will be
 
 ```lua
 {
-    n_lines_to_search = 100 -- how many lines should be searched for a matching delimiter
     highlight_in_insert_mode = true, -- should highlighting also be done in insert mode
     delay = 100, -- delay before the highglight
 }

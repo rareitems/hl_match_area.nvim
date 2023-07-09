@@ -147,16 +147,14 @@ local DEFAULT_CONFIG = {
 ---Config has a following structure and purpose
 --->
 ---{
----  n_lines_to_search: number -- how many lines should be searched for a matching delimiter
 ---  highlight_in_insert_mode: boolean, -- should highlighting also be done in insert mode
----  dealy: 100, -- delay in miliseconds to highlight
+---  delay: 100, -- delay in miliseconds to highlight
 ---}
 ---<
 ---
 ---Any of the values can be empty if so default config values are used.
 ---Default config values are as follows
 --->
----  n_lines_to_search = 100,
 ---  highlight_in_insert_mode = true,
 ---  delay = 100,
 ---<

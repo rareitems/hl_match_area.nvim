@@ -1,4 +1,4 @@
-================================================================================
+==============================================================================
                                                                  *hl_match_area*
 
 Provides a highlighting of the area between matching delimiters.
@@ -30,7 +30,7 @@ ____
 -^
 <
 
-================================================================================
+==============================================================================
                                                        *hl_match_area.Highlight*
 
 Highlight name is 'MatchArea' can be changed through 'vim.api.set_hl'
@@ -43,7 +43,6 @@ hl_match_area.setup({user_config})                         *hl_match_area.setup*
     Config has a following structure and purpose
     >
     {
-      n_lines_to_search: number -- how many lines should be searched for a matching delimiter
       highlight_in_insert_mode: boolean, -- should highlighting also be done in insert mode
       delay: 100, -- delay in miliseconds to highlight
     }
@@ -52,7 +51,6 @@ hl_match_area.setup({user_config})                         *hl_match_area.setup*
     Any of the values can be empty if so default config values are used.
     Default config values are as follows
     >
-      n_lines_to_search = 100,
       highlight_in_insert_mode = true,
       delay = 100,
     <
