@@ -45,102 +45,102 @@ local TIMER = nil
 local should_clear_hl = false
 
 local valid_chars_forward_search = {
-  ["("] = true,
-  ["["] = true,
-  ["{"] = true,
-  ["<"] = true,
+    ["("] = true,
+    ["["] = true,
+    ["{"] = true,
+    ["<"] = true,
 }
 
 local valid_chars_backward_search = {
-  [")"] = true,
-  ["]"] = true,
-  ["}"] = true,
-  [">"] = true,
+    [")"] = true,
+    ["]"] = true,
+    ["}"] = true,
+    [">"] = true,
 }
 
 local opposites = {
-  ["{"] = "}",
-  ["}"] = "{",
+    ["{"] = "}",
+    ["}"] = "{",
 
-  ["["] = [[\]] .. "]",
-  ["]"] = [[\]] .. "[",
+    ["["] = [[\]] .. "]",
+    ["]"] = [[\]] .. "[",
 
-  ["("] = ")",
-  [")"] = "(",
+    ["("] = ")",
+    [")"] = "(",
 
-  ["<"] = ">",
-  [">"] = "<",
+    ["<"] = ">",
+    [">"] = "<",
 }
 
 local function check(highlight_in_insert_mode, delay)
-  if should_clear_hl then
-    vim.api.nvim_buf_clear_namespace(0, NSID, 0, -1)
-    should_clear_hl = false
-  end
+    if should_clear_hl then
+        vim.api.nvim_buf_clear_namespace(0, NSID, 0, -1)
+        should_clear_hl = false
+    end
 
-  if TIMER then
-    TIMER:stop()
-    TIMER = nil
-  end
+    if TIMER then
+        TIMER:stop()
+        TIMER = nil
+    end
 
-  if vim.fn.mode() == "i" and not highlight_in_insert_mode then
-    return
-  end
+    if vim.fn.mode() == "i" and not highlight_in_insert_mode then
+        return
+    end
 
-  local pos_to_hl, start_row, start_col, end_row, end_col
-  local pos = vim.api.nvim_win_get_cursor(0)
+    local pos_to_hl, start_row, start_col, end_row, end_col
+    local pos = vim.api.nvim_win_get_cursor(0)
 
-  -- pos is (1,0)-indexed and set_extmark is 0 indexed
-  local row = pos[1] - 1
-  local col = pos[2]
+    -- pos is (1,0)-indexed and set_extmark is 0 indexed
+    local row = pos[1] - 1
+    local col = pos[2]
 
-  local cur_char = vim.api.nvim_buf_get_text(0, row, col, row, col + 1, {})[1]
+    local cur_char = vim.api.nvim_buf_get_text(0, row, col, row, col + 1, {})[1]
 
-  if valid_chars_forward_search[cur_char] then
-    local end_char = opposites[cur_char]
-    pos_to_hl = vim.fn.searchpairpos(cur_char, "", end_char, "nW")
+    if valid_chars_forward_search[cur_char] then
+        local end_char = opposites[cur_char]
+        pos_to_hl = vim.fn.searchpairpos(cur_char, "", end_char, "nW")
 
-    start_row = row
-    start_col = col
-    end_row = pos_to_hl[1] - 1
-    end_col = pos_to_hl[2] -- -1 + 1 - searchpairpos is (1,1)-indexed, but end_col is exclusive
-  elseif valid_chars_backward_search[cur_char] then
-    local start_char = opposites[cur_char]
-    pos_to_hl = vim.fn.searchpairpos(start_char, "", cur_char, "nbW")
+        start_row = row
+        start_col = col
+        end_row = pos_to_hl[1] - 1
+        end_col = pos_to_hl[2] -- -1 + 1 - searchpairpos is (1,1)-indexed, but end_col is exclusive
+    elseif valid_chars_backward_search[cur_char] then
+        local start_char = opposites[cur_char]
+        pos_to_hl = vim.fn.searchpairpos(start_char, "", cur_char, "nbW")
 
-    start_row = pos_to_hl[1] - 1 -- searchpairpos is (1,1)-indexed
-    start_col = pos_to_hl[2] - 1 -- searchpairpos is (1,1)-indexed
-    end_row = row
-    end_col = col + 1 -- end_col is exclusive
-  else
-    return
-  end
+        start_row = pos_to_hl[1] - 1 -- searchpairpos is (1,1)-indexed
+        start_col = pos_to_hl[2] - 1 -- searchpairpos is (1,1)-indexed
+        end_row = row
+        end_col = col + 1            -- end_col is exclusive
+    else
+        return
+    end
 
-  if vim.deep_equal(pos_to_hl, { 0, 0 }) then
-    return
-  end
+    if vim.deep_equal(pos_to_hl, { 0, 0 }) then
+        return
+    end
 
-  should_clear_hl = true
-  TIMER = vim.loop.new_timer()
+    should_clear_hl = true
+    TIMER = vim.loop.new_timer()
 
-  TIMER:start(
-    delay,
-    0,
-    vim.schedule_wrap(function()
-      vim.api.nvim_buf_set_extmark(0, NSID, start_row, start_col, {
-        end_row = end_row,
-        end_col = end_col,
-        hl_group = HIGHLIGHT_NAME,
-      })
-    end)
-  )
+    TIMER:start(
+        delay,
+        0,
+        vim.schedule_wrap(function()
+            vim.api.nvim_buf_set_extmark(0, NSID, start_row, start_col, {
+                end_row = end_row,
+                end_col = end_col,
+                hl_group = HIGHLIGHT_NAME,
+            })
+        end)
+    )
 end
 
 local hl_match_area = {}
 
 local DEFAULT_CONFIG = {
-  delay = 100, -- in ms
-  highlight_in_insert_mode = true,
+    delay = 100, -- in ms
+    highlight_in_insert_mode = true,
 }
 
 ---Setups and enables the plugin plugin with the provided config.
@@ -160,33 +160,33 @@ local DEFAULT_CONFIG = {
 ---<
 ---@param user_config table
 hl_match_area.setup = function(user_config)
-  local augroup = "hl_match_area_augroup"
-  local config = vim.tbl_deep_extend("force", DEFAULT_CONFIG, user_config or {})
+    local augroup = "hl_match_area_augroup"
+    local config = vim.tbl_deep_extend("force", DEFAULT_CONFIG, user_config or {})
 
-  if vim.fn.hlexists(HIGHLIGHT_NAME) == 0 then
-    vim.api.nvim_set_hl(0, HIGHLIGHT_NAME, { bg = "#222277" })
-  end
+    if vim.fn.hlexists(HIGHLIGHT_NAME) == 0 then
+        vim.api.nvim_set_hl(0, HIGHLIGHT_NAME, { bg = "#222277" })
+    end
 
-  vim.api.nvim_create_augroup(augroup, { clear = true })
+    vim.api.nvim_create_augroup(augroup, { clear = true })
 
-  vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
-    group = augroup,
-    callback = function()
-      check(config.highlight_in_insert_mode, config.delay)
-    end,
-  })
+    vim.api.nvim_create_autocmd({ "CursorMoved", "CursorMovedI" }, {
+        group = augroup,
+        callback = function()
+            check(config.highlight_in_insert_mode, config.delay)
+        end,
+    })
 
-  vim.api.nvim_create_autocmd({ "BufLeave", "WinLeave" }, {
-    group = augroup,
-    callback = function()
-      if should_clear_hl then
-        TIMER:stop()
-        TIMER = nil
-        vim.api.nvim_buf_clear_namespace(0, NSID, 0, -1)
-        should_clear_hl = false
-      end
-    end,
-  })
+    vim.api.nvim_create_autocmd({ "BufLeave", "WinLeave" }, {
+        group = augroup,
+        callback = function()
+            if should_clear_hl then
+                TIMER:stop()
+                TIMER = nil
+                vim.api.nvim_buf_clear_namespace(0, NSID, 0, -1)
+                should_clear_hl = false
+            end
+        end,
+    })
 end
 
 return hl_match_area
