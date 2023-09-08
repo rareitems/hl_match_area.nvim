@@ -33,3 +33,13 @@ Changing the highglight can be done through Neovim API. For example:
 ```lua
 vim.api.nvim_set_hl(0, 'MatchArea', {bg = "#FFFFFF"})
 ```
+
+## Configuration
+
+```lua
+{
+        delay = 100 --(number) Delay in milliseconds to highlight
+        highlight_in_insert_mode = true --(boolean) If true highlight will also be done in insert mode
+        matchpairs  = { "(:)", "{:}", "[:]", "<:>" } --(string[]|nil)  If you want to highlight specific characters and not rely on `vim.opt.matchpairs`. This should follow the same structure as `vim.opt.matchpairs:get` (example: `{"(:)", "{:}"}`) }
+}
+```
