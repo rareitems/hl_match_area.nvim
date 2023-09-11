@@ -143,6 +143,11 @@ local function find()
 
         if cur_char == first then
             local end_char = opposite
+            if cur_char == "[" then
+                cur_char = "\\["
+                end_char = "\\]"
+            end
+
             pos_to_hl = vim.fn.searchpairpos(cur_char, "", end_char, "nW", "", 0, 25)
 
             if pos_to_hl == nil then
@@ -156,6 +161,11 @@ local function find()
             break
         elseif cur_char == opposite then
             local start_char = first
+            if cur_char == "]" then
+                cur_char = "\\]"
+                end_char = "\\["
+            end
+
             pos_to_hl = vim.fn.searchpairpos(start_char, "", cur_char, "nbW", "", 0, 25)
 
             if pos_to_hl == nil then
@@ -165,7 +175,7 @@ local function find()
             start_row = pos_to_hl[1] - 1 -- searchpairpos is (1,1)-indexed
             start_col = pos_to_hl[2] - 1 -- searchpairpos is (1,1)-indexed
             end_row = row
-            end_col = col + 1 -- end_col is exclusive
+            end_col = col + 1            -- end_col is exclusive
             break
         end
         ::continue::
