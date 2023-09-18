@@ -221,7 +221,7 @@ local function check(highlight_in_insert_mode, delay)
                     hl_group = HIGHLIGHT_NAME,
                 })
             if not status then
-                error(err)
+                -- error(err)
             end
         end)
     )
@@ -237,7 +237,8 @@ hl_match_area.setup = function(user_config)
         delay = 100, -- in ms
         highlight_in_insert_mode = true,
     }
-    local config = vim.tbl_deep_extend("force", default_config, user_config or {})
+    user_config = user_config or {}
+    local config = vim.tbl_deep_extend("force", default_config, user_config)
 
     if vim.fn.hlexists(HIGHLIGHT_NAME) == 0 then
         vim.api.nvim_set_hl(0, HIGHLIGHT_NAME, { bg = "#222277" })
